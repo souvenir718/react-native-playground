@@ -1,9 +1,11 @@
 import AppLoading from "expo-app-loading/build";
 import React, { useState } from "react";
 import * as Font from "expo-font";
-import { Asset, useAssets } from "expo-asset";
-import { Image, Text } from "react-native";
+import { Asset } from "expo-asset";
+import { Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { NavigationContainer } from "@react-navigation/native";
+import Tabs from "./navigation/Tabs";
 
 const loadFonts = (fonts) => fonts.map((font) => Font.loadAsync(font));
 const loadImages = (images) =>
@@ -36,7 +38,11 @@ export default function App() {
       />
     );
 
-  return <Text>Success!!</Text>;
+  return (
+    <NavigationContainer>
+      <Tabs />
+    </NavigationContainer>
+  );
 }
 
 /**
