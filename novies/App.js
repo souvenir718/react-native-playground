@@ -2,9 +2,9 @@ import AppLoading from "expo-app-loading/build";
 import React, { useState } from "react";
 import * as Font from "expo-font";
 import { Asset } from "expo-asset";
-import { Image } from "react-native";
+import { Image, useColorScheme } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DarkTheme, DefaultTheme } from "@react-navigation/native";
 import Tabs from "./navigation/Tabs";
 
 const loadFonts = (fonts) => fonts.map((font) => Font.loadAsync(font));
@@ -24,10 +24,12 @@ export default function App() {
     const fonts = loadFonts([Ionicons.font]);
     const images = loadImages([
       require("./sing.png"),
-      "https://d33wubrfki0l68.cloudfront.net/4245a6b338cc1b008aa1265c213c1e75be207801/2eaf7/img/oss_logo.svg",
+      // "https://d33wubrfki0l68.cloudfront.net/4245a6b338cc1b008aa1265c213c1e75be207801/2eaf7/img/oss_logo.svg",
     ]);
     await Promise.all([...fonts, ...images]);
   };
+  // when I want to use thems in NavigationContainer, use this
+  // const isDark = useColorScheme() === "dark";
 
   if (!ready)
     return (
@@ -39,6 +41,7 @@ export default function App() {
     );
 
   return (
+    // <NavigationContainer theme={isDark ? DarkTheme : DefaultTheme}>
     <NavigationContainer>
       <Tabs />
     </NavigationContainer>

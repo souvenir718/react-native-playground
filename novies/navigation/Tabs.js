@@ -26,7 +26,6 @@ const Tabs = () => {
           </View>
         ),
       }}
-    //   screenOptions={{ tabBarLabelStyle: { fontWeight: "bold" } }}
     >
       <Tab.Screen
         name="Movies"
