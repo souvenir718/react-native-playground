@@ -4,8 +4,13 @@ import * as Font from "expo-font";
 import { Asset } from "expo-asset";
 import { Image, useColorScheme } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { NavigationContainer, DarkTheme, DefaultTheme } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  DarkTheme,
+  DefaultTheme,
+} from "@react-navigation/native";
 import Tabs from "./navigation/Tabs";
+import Stack from "./navigation/Stack";
 
 const loadFonts = (fonts) => fonts.map((font) => Font.loadAsync(font));
 const loadImages = (images) =>
@@ -43,7 +48,7 @@ export default function App() {
   return (
     // <NavigationContainer theme={isDark ? DarkTheme : DefaultTheme}>
     <NavigationContainer>
-      <Tabs />
+      <Stack />
     </NavigationContainer>
   );
 }
