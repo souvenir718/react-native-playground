@@ -1,9 +1,9 @@
-import react from "react";
+import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Movies from "../screens/Movies";
 import Search from "../screens/Search";
 import Tv from "../screens/Tv";
-import { Text, useColorScheme, View } from "react-native";
+import { useColorScheme } from "react-native";
 import { BLACK_COLOR, DARK_GREY, LIGHT_GREY, YELLOW_COLOR } from "../colors";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -24,8 +24,8 @@ const Tabs = () => {
         tabBarLabelStyle: {
           marginTop: -5,
           fontSize: 12,
-          fontWeight: "600"
-        }
+          fontWeight: "600",
+        },
         // headerRight: () => (
         //   <View>
         //     <Text>Right</Text>
@@ -38,8 +38,8 @@ const Tabs = () => {
         component={Movies}
         options={{
           tabBarIcon: ({ focused, color, size }) => {
-            return <Ionicons name="film-outline" color={color} size={size} />
-          }
+            return <Ionicons name="film-outline" color={color} size={size} />;
+          },
         }}
       />
       <Tab.Screen
@@ -47,8 +47,8 @@ const Tabs = () => {
         component={Tv}
         options={{
           tabBarIcon: ({ focused, color, size }) => {
-            return <Ionicons name="tv-outline" color={color} size={size} />
-          }
+            return <Ionicons name="tv-outline" color={color} size={size} />;
+          },
         }}
       />
       <Tab.Screen
@@ -56,8 +56,14 @@ const Tabs = () => {
         component={Search}
         options={{
           tabBarIcon: ({ focused, color, size }) => {
-            return <Ionicons name={focused ? "search" : "search-outline"} color={color} size={size} />
-          }
+            return (
+              <Ionicons
+                name={focused ? "search" : "search-outline"}
+                color={color}
+                size={size}
+              />
+            );
+          },
         }}
       />
     </Tab.Navigator>
