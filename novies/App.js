@@ -11,6 +11,9 @@ import {
 } from "@react-navigation/native";
 import Tabs from "./navigation/Tabs";
 import Stack from "./navigation/Stack";
+import Root from "./navigation/Root";
+import { ThemeProvider } from "styled-components/native";
+import { darkTheme, lightTheme } from "./styled";
 
 const loadFonts = (fonts) => fonts.map((font) => Font.loadAsync(font));
 const loadImages = (images) =>
@@ -34,7 +37,7 @@ export default function App() {
     await Promise.all([...fonts, ...images]);
   };
   // when I want to use thems in NavigationContainer, use this
-  // const isDark = useColorScheme() === "dark";
+  const isDark = useColorScheme() === "dark";
 
   if (!ready)
     return (
@@ -47,9 +50,11 @@ export default function App() {
 
   return (
     // <NavigationContainer theme={isDark ? DarkTheme : DefaultTheme}>
-    <NavigationContainer>
-      <Stack />
-    </NavigationContainer>
+    <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+      <NavigationContainer>
+        <Root />
+      </NavigationContainer>
+    </ThemeProvider>
   );
 }
 
