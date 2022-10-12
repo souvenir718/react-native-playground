@@ -4,6 +4,7 @@ import styled from "styled-components/native";
 import { makeImgPath } from "../utils";
 import { BlurView } from "expo-blur";
 import Poster from "./Poster";
+import Votes from "./Votes";
 
 const Wrapper = styled.View`
   flex-direction: row;
@@ -25,10 +26,6 @@ const OverView = styled.Text`
   margin-top: 10px;
   color: rgba(255, 255, 255, 0.8);
 `;
-const Votes = styled(OverView)`
-  margin-top: 5px;
-  font-size: 12px;
-`;
 
 const Slide = ({
   backdropPath,
@@ -48,7 +45,7 @@ const Slide = ({
           <Poster path={posterPath} />
           <Column>
             <Title>{originalTitle}</Title>
-            {voteAverage > 0 ? <Votes>⭐️ {voteAverage}/10</Votes> : null}
+            <Votes votes={voteAverage}/>
             <OverView>{overview.slice(0, 100)}...</OverView>
           </Column>
         </Wrapper>

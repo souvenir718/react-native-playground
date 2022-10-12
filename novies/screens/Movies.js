@@ -3,8 +3,8 @@ import styled from "styled-components/native";
 import { ActivityIndicator, Dimensions, RefreshControl } from "react-native";
 import Swiper from "react-native-swiper";
 import Slide from "../components/Slide";
-import Poster from "../components/Poster";
-import Votes from "../components/Votes";
+import HMedia from "../components/HMedia";
+import VMedia from "../components/VMedia";
 
 const API_KEY = "ffe228ac6463158a2c4230ff91248853";
 
@@ -20,40 +20,11 @@ const ListTitle = styled.Text`
   font-weight: 600;
   margin-left: 20px;
 `;
-const Movie = styled.View`
-  margin-right: 20px;
-  align-items: center;
-`;
 const TrendingScroll = styled.ScrollView`
   margin-top: 20px;
 `;
-const Title = styled.Text`
-  color: white;
-  font-weight: 600;
-  margin-top: 7px;
-  margin-bottom: 5px;
-`;
 const ListContainer = styled.View`
   margin-bottom: 40px;
-`;
-const HMovie = styled.View`
-  padding: 0px 20px;
-  margin-bottom: 30px;
-  flex-direction: row;
-`;
-const HColumn = styled.View`
-  margin-left: 15px;
-  width: 70%;
-`;
-const Overview = styled.Text`
-  color: white;
-  opacity: 0.8;
-  width: 100%;
-`;
-const Release = styled.Text`
-  color: white;
-  font-size: 12px;
-  margin-vertical: 10px;
 `;
 const ComingSoonTitle = styled(ListTitle)`
   margin-bottom: 30px;
@@ -99,11 +70,11 @@ const Movies = ({ navigation: { navigate } }) => {
     setLoading(false);
   };
 
-  const onRefresh = async() => {
+  const onRefresh = async () => {
     setRefreshing(true);
     await getData();
     setRefreshing(false);
-  }
+  };
 
   useEffect(() => {
     getData();
@@ -114,9 +85,9 @@ const Movies = ({ navigation: { navigate } }) => {
       <ActivityIndicator />
     </Loader>
   ) : (
-    <Container 
+    <Container
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
       <Swiper
@@ -151,37 +122,24 @@ const Movies = ({ navigation: { navigate } }) => {
           contentContainerStyle={{ paddingLeft: 20 }}
         >
           {trending.map((movie) => (
-            <Movie key={movie.id}>
-              <Poster path={movie.poster_path} />
-              <Title>
-                {movie.original_title.slice(0, 12)}
-                {movie.original_title.length > 12 ? "..." : null}
-              </Title>
-              <Votes votes={movie.vote_average}/>
-            </Movie>
+            <VMedia
+              key={movie.id}
+              posterPath={movie.poster_path}
+              originalTitle={movie.original_title}
+              voteAverage={movie.vote_average}
+            />
           ))}
         </TrendingScroll>
       </ListContainer>
       <ComingSoonTitle>Coming Soon</ComingSoonTitle>
       {upComing.map((movie) => (
-        <HMovie key={movie.id}>
-          <Poster path={movie.poster_path} />
-          <HColumn>
-            <Title>{movie.original_title}</Title>
-            <Release>
-              {new Date(movie.release_date).toLocaleDateString("ko", {
-                month: "long",
-                day: "numeric",
-                year: "numeric",
-              })}
-            </Release>
-            <Overview>
-              {movie.overview !== "" && movie.overview.length > 140
-                ? `${movie.overview.slice(0, 140)}...`
-                : movie.overview}
-            </Overview>
-          </HColumn>
-        </HMovie>
+        <HMedia
+          key={movie.id}
+          posterPath={movie.poster_path}
+          originalTitle={movie.original_title}
+          overview={movie.overview}
+          releaseDate={movie.release_date}
+        />
       ))}
     </Container>
   );
