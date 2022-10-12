@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components/native";
-import { ActivityIndicator, Dimensions } from "react-native";
+import { ActivityIndicator, Dimensions, RefreshControl } from "react-native";
 import Swiper from "react-native-swiper";
 import Slide from "../components/Slide";
 import Poster from "../components/Poster";
+import Votes from "../components/Votes";
 
 const API_KEY = "ffe228ac6463158a2c4230ff91248853";
 
@@ -17,7 +18,7 @@ const ListTitle = styled.Text`
   color: white;
   font-size: 18px;
   font-weight: 600;
-  margin-left: 30px;
+  margin-left: 20px;
 `;
 const Movie = styled.View`
   margin-right: 20px;
@@ -32,15 +33,11 @@ const Title = styled.Text`
   margin-top: 7px;
   margin-bottom: 5px;
 `;
-const Votes = styled.Text`
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 10px;
-`;
 const ListContainer = styled.View`
   margin-bottom: 40px;
 `;
 const HMovie = styled.View`
-  padding: 0px 30px;
+  padding: 0px 20px;
   margin-bottom: 30px;
   flex-direction: row;
 `;
@@ -65,6 +62,7 @@ const ComingSoonTitle = styled(ListTitle)`
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const Movies = ({ navigation: { navigate } }) => {
+  const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [nowPlaying, setNowPlaying] = useState([]);
   const [upComing, setUpComing] = useState([]);
@@ -100,6 +98,13 @@ const Movies = ({ navigation: { navigate } }) => {
     await Promise.all([getTrending(), getUpcoming(), getNowPlaying()]);
     setLoading(false);
   };
+
+  const onRefresh = async() => {
+    setRefreshing(true);
+    await getData();
+    setRefreshing(false);
+  }
+
   useEffect(() => {
     getData();
   }, []);
@@ -109,7 +114,11 @@ const Movies = ({ navigation: { navigate } }) => {
       <ActivityIndicator />
     </Loader>
   ) : (
-    <Container>
+    <Container 
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>
+      }
+    >
       <Swiper
         horizontal
         containerStyle={{
@@ -148,11 +157,7 @@ const Movies = ({ navigation: { navigate } }) => {
                 {movie.original_title.slice(0, 12)}
                 {movie.original_title.length > 12 ? "..." : null}
               </Title>
-              <Votes>
-                {movie.vote_average > 0
-                  ? `⭐️ ${movie.vote_average.toFixed(1)} / 10`
-                  : `Coming soon`}
-              </Votes>
+              <Votes votes={movie.vote_average}/>
             </Movie>
           ))}
         </TrendingScroll>
