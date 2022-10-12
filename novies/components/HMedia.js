@@ -5,7 +5,6 @@ import Votes from "./Votes";
 
 const HMovie = styled.View`
   padding: 0px 20px;
-  margin-bottom: 30px;
   flex-direction: row;
 `;
 const HColumn = styled.View`
@@ -14,6 +13,7 @@ const HColumn = styled.View`
 `;
 const Title = styled.Text`
   color: white;
+  width: 95%;
   font-weight: 600;
   margin-top: 7px;
   margin-bottom: 5px;
@@ -26,7 +26,7 @@ const Release = styled.Text`
 const Overview = styled.Text`
   color: white;
   opacity: 0.8;
-  width: 100%;
+  width: 95%;
 `;
 
 const HMedia = ({
