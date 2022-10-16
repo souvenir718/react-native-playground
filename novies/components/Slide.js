@@ -1,10 +1,11 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableWithoutFeedback, View } from "react-native";
 import styled from "styled-components/native";
 import { makeImgPath } from "../utils";
 import { BlurView } from "expo-blur";
 import Poster from "./Poster";
 import Votes from "./Votes";
+import { useNavigation } from "@react-navigation/native";
 
 const Wrapper = styled.View`
   flex-direction: row;
@@ -33,24 +34,36 @@ const Slide = ({
   originalTitle,
   voteAverage,
   overview,
+  fullData,
 }) => {
+  const navigation = useNavigation();
+  const goToDetail = () => {
+    navigation.navigate("Stack", {
+      screen: "Detail",
+      params: {
+        ...fullData,
+      },
+    });
+  };
   return (
-    <View style={{ flex: 1 }}>
-      <BgImg
-        style={StyleSheet.absoluteFill}
-        source={{ uri: makeImgPath(backdropPath) }}
-      />
-      <BlurView intensity={95} style={StyleSheet.absoluteFill}>
-        <Wrapper>
-          <Poster path={posterPath} />
-          <Column>
-            <Title>{originalTitle}</Title>
-            <Votes votes={voteAverage}/>
-            <OverView>{overview.slice(0, 100)}...</OverView>
-          </Column>
-        </Wrapper>
-      </BlurView>
-    </View>
+    <TouchableWithoutFeedback onPress={goToDetail}>
+      <View style={{ flex: 1 }} r>
+        <BgImg
+          style={StyleSheet.absoluteFill}
+          source={{ uri: makeImgPath(backdropPath) }}
+        />
+        <BlurView intensity={95} style={StyleSheet.absoluteFill}>
+          <Wrapper>
+            <Poster path={posterPath} />
+            <Column>
+              <Title>{originalTitle}</Title>
+              <Votes votes={voteAverage} />
+              <OverView>{overview.slice(0, 100)}...</OverView>
+            </Column>
+          </Wrapper>
+        </BlurView>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 

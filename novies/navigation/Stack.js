@@ -1,37 +1,30 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Text, TouchableOpacity, View } from "react-native";
-
-const ScreenOne = ({ navigation: { navigate } }) => (
-  <TouchableOpacity onPress={() => navigate("Two")}>
-    <Text>One</Text>
-  </TouchableOpacity>
-);
-const ScreenTwo = ({ navigation: { navigate } }) => (
-  <TouchableOpacity onPress={() => navigate("Three")}>
-    <Text>Two</Text>
-  </TouchableOpacity>
-);
-const ScreenThree = ({ navigation: { navigate } }) => (
-  <TouchableOpacity onPress={() => navigate("Tabs", { screen: "Search" })}>
-    <Text>Three</Text>
-  </TouchableOpacity>
-);
+import Detail from "../screens/Detail";
+import { Text, TouchableOpacity, useColorScheme, View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { BLACK_COLOR } from "../colors";
 
 const NativeStack = createNativeStackNavigator();
 
-const Stack = () => (
-  <NativeStack.Navigator
-    screenOptions={{
-      headerBackTitleVisible: false,
-      presentation: "card",
-      //   animation: "fade",
-    }}
-  >
-    <NativeStack.Screen name="One" component={ScreenOne} />
-    <NativeStack.Screen name="Two" component={ScreenTwo} />
-    <NativeStack.Screen name="Three" component={ScreenThree} />
-  </NativeStack.Navigator>
-);
+const Stack = () => {
+  const isDark = useColorScheme() === "dark";
+  const navigation = useNavigation();
+  return (
+    <NativeStack.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: isDark ? BLACK_COLOR : "white" },
+        headerTitleStyle: { color: isDark ? "white" : BLACK_COLOR },
+        headerLeft: () => (
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Text style={{ fontWeight:'700', color: isDark ? "white" : BLACK_COLOR}}>뒤로</Text>
+          </TouchableOpacity>
+        ),
+      }}
+    >
+      <NativeStack.Screen name="Detail" component={Detail} />
+    </NativeStack.Navigator>
+  );
+};
 
 export default Stack;
