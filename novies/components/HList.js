@@ -30,7 +30,7 @@ const HList = ({ title, data }) => {
         data={data}
         renderItem={({ item }) => (
           <VMedia
-            originalTitle={item.orinal_title ?? item.original_name}
+            originalTitle={item.original_title ?? item.original_name}
             posterPath={item.poster_path}
             voteAverage={item.vote_average}
           />
