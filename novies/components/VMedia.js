@@ -13,7 +13,7 @@ const Title = styled.Text`
   margin-bottom: 5px;
 `;
 
-const VMedia = ({ posterPath, originalTitle, voteAverage }) => {
+const VMedia = ({ posterPath, originalTitle = "", voteAverage }) => {
   return (
     <Movie>
       <Poster path={posterPath} />

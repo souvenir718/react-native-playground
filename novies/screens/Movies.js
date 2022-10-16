@@ -1,44 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components/native";
-import {
-  ActivityIndicator,
-  Dimensions,
-  FlatList,
-  RefreshControl,
-  Text,
-  View,
-} from "react-native";
+import { Dimensions, FlatList } from "react-native";
 import Swiper from "react-native-swiper";
 import Slide from "../components/Slide";
 import HMedia from "../components/HMedia";
 import VMedia from "../components/VMedia";
 import { useQuery, useQueryClient } from "react-query";
 import { moviesApi } from "../api";
+import Loader from "../components/Loader";
+import HList from "../components/HList";
 
-const API_KEY = "ffe228ac6463158a2c4230ff91248853";
-
-const Loader = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-`;
 const ListTitle = styled.Text`
   color: white;
   font-size: 18px;
   font-weight: 600;
   margin-left: 20px;
 `;
-const TrendingScroll = styled.FlatList`
-  margin-top: 20px;
-`;
-const ListContainer = styled.View`
-  margin-bottom: 40px;
-`;
 const ComingSoonTitle = styled(ListTitle)`
   margin-bottom: 20px;
-`;
-const VSeperator = styled.View`
-  width: 20px;
 `;
 const HSeperator = styled.View`
   height: 20px;
@@ -47,7 +26,7 @@ const HSeperator = styled.View`
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const Movies = ({ navigation: { navigate } }) => {
-  const queryClient  = useQueryClient();
+  const queryClient = useQueryClient();
   const {
     isLoading: nowPlayingLoading,
     data: nowPlayingData,
@@ -65,7 +44,7 @@ const Movies = ({ navigation: { navigate } }) => {
   } = useQuery(["movies", "trending"], moviesApi.trending);
 
   const onRefresh = async () => {
-    queryClient.refetchQueries(["movies"])
+    queryClient.refetchQueries(["movies"]);
   };
 
   const renderVMedia = ({ item }) => (
@@ -91,9 +70,7 @@ const Movies = ({ navigation: { navigate } }) => {
     nowPlayingIsRefetching || upcomingIsRefetching || trendingIsRefetching;
 
   return loading ? (
-    <Loader>
-      <ActivityIndicator />
-    </Loader>
+    <Loader />
   ) : (
     <FlatList
       refreshing={refreshing}
@@ -124,18 +101,7 @@ const Movies = ({ navigation: { navigate } }) => {
               />
             ))}
           </Swiper>
-          <ListContainer>
-            <ListTitle>Trending Movies</ListTitle>
-            <TrendingScroll
-              data={trendingData.results}
-              horizontal
-              keyExtractor={movieKeyExtractor}
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ paddingHorizontal: 20 }}
-              ItemSeparatorComponent={VSeperator}
-              renderItem={renderVMedia}
-            />
-          </ListContainer>
+          <HList title="Trending Movies" data={trendingData.results} />
           <ComingSoonTitle>Coming Soon</ComingSoonTitle>
         </>
       }
