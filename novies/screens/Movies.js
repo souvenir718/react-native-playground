@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components/native";
 import { Dimensions, FlatList } from "react-native";
 import Swiper from "react-native-swiper";
 import Slide from "../components/Slide";
 import HMedia from "../components/HMedia";
-import VMedia from "../components/VMedia";
 import { useQuery, useQueryClient } from "react-query";
 import { moviesApi } from "../api";
 import Loader from "../components/Loader";
@@ -27,33 +26,25 @@ const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const Movies = ({ navigation: { navigate } }) => {
   const queryClient = useQueryClient();
-  const {
-    isLoading: nowPlayingLoading,
-    data: nowPlayingData,
-    isRefetching: nowPlayingIsRefetching,
-  } = useQuery(["movies", "nowPlaying"], moviesApi.nowPlaying);
-  const {
-    isLoading: upcomingLoading,
-    data: upcomingData,
-    isRefetching: upcomingIsRefetching,
-  } = useQuery(["movies", "upcoming"], moviesApi.upcoming);
-  const {
-    isLoading: trendingLoading,
-    data: trendingData,
-    isRefetching: trendingIsRefetching,
-  } = useQuery(["movies", "trending"], moviesApi.trending);
+  const [refreshing, setRefresing] = useState(false);
+  const { isLoading: nowPlayingLoading, data: nowPlayingData } = useQuery(
+    ["movies", "nowPlaying"],
+    moviesApi.nowPlaying
+  );
+  const { isLoading: upcomingLoading, data: upcomingData } = useQuery(
+    ["movies", "upcoming"],
+    moviesApi.upcoming
+  );
+  const { isLoading: trendingLoading, data: trendingData } = useQuery(
+    ["movies", "trending"],
+    moviesApi.trending
+  );
 
   const onRefresh = async () => {
-    queryClient.refetchQueries(["movies"]);
+    setRefresing(true);
+    await queryClient.refetchQueries(["movies"]);
+    setRefresing(false);
   };
-
-  const renderVMedia = ({ item }) => (
-    <VMedia
-      posterPath={item.poster_path}
-      originalTitle={item.original_title}
-      voteAverage={item.vote_average}
-    />
-  );
 
   const renderHMedia = ({ item }) => (
     <HMedia
@@ -66,8 +57,6 @@ const Movies = ({ navigation: { navigate } }) => {
 
   const movieKeyExtractor = (item) => item.id;
   const loading = nowPlayingLoading || upcomingLoading || trendingLoading;
-  const refreshing =
-    nowPlayingIsRefetching || upcomingIsRefetching || trendingIsRefetching;
 
   return loading ? (
     <Loader />
