@@ -4,7 +4,7 @@ import { Dimensions, FlatList } from "react-native";
 import Swiper from "react-native-swiper";
 import Slide from "../components/Slide";
 import HMedia from "../components/HMedia";
-import { useQuery, useQueryClient } from "react-query";
+import { useInfiniteQuery, useQuery, useQueryClient } from "react-query";
 import { moviesApi } from "../api";
 import Loader from "../components/Loader";
 import HList from "../components/HList";
@@ -31,9 +31,15 @@ const Movies = ({ navigation: { navigate } }) => {
     ["movies", "nowPlaying"],
     moviesApi.nowPlaying
   );
-  const { isLoading: upcomingLoading, data: upcomingData } = useQuery(
+  const { isLoading: upcomingLoading, data: upcomingData, hasNextPage, fetchNextPage } = useInfiniteQuery(
     ["movies", "upcoming"],
-    moviesApi.upcoming
+    moviesApi.upcoming,
+    {
+      getNextPageParam: (currentPage) => {
+        const nextPage = currentPage.page + 1;
+        return nextPage > currentPage.total_pages ? null : currentPage.page + 1;
+      },
+    }
   );
   const { isLoading: trendingLoading, data: trendingData } = useQuery(
     ["movies", "trending"],
@@ -58,6 +64,11 @@ const Movies = ({ navigation: { navigate } }) => {
 
   const movieKeyExtractor = (item) => item.id;
   const loading = nowPlayingLoading || upcomingLoading || trendingLoading;
+  const loadMore = () => {
+    if(hasNextPage){
+      fetchNextPage();
+    }
+  };
 
   return loading ? (
     <Loader />
@@ -65,6 +76,8 @@ const Movies = ({ navigation: { navigate } }) => {
     <FlatList
       refreshing={refreshing}
       onRefresh={onRefresh}
+      onEndReached={loadMore}
+      onEndReachedThreshold={0.5}
       ListHeaderComponent={
         <>
           <Swiper
@@ -96,7 +109,7 @@ const Movies = ({ navigation: { navigate } }) => {
           <ComingSoonTitle>Coming Soon</ComingSoonTitle>
         </>
       }
-      data={upcomingData.results}
+      data={upcomingData.pages.map((page) => page.results).flat()}
       keyExtractor={movieKeyExtractor}
       ItemSeparatorComponent={HSeperator}
       renderItem={renderHMedia}

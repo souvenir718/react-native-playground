@@ -64,7 +64,7 @@ const Detail = ({ navigation: { setOptions }, route: { params } }) => {
   );
   const shareMedia = async () => {
     const isAndroid = Platform.OS === "android";
-    const homepage = isMovie
+    const homepage = isMovie && "imdb_id"
       ? `https://www.imdb.com/title/${data.imdb_id}/`
       : data.homepage;
     if (isAndroid) {
